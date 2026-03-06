@@ -1,12 +1,18 @@
+import { Card as MuiCard, CardContent } from "@mui/material";
 import { motion } from "framer-motion";
 
-export const Card = ({ children, style = {} }) => (
-  <motion.div
+const MotionCard = motion.create(MuiCard);
+
+export const Card = ({ children, style = {}, sx = {} }) => (
+  <MotionCard
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.2, ease: "easeOut" }}
-    style={{ background: "white", borderRadius: 16, padding: 16, ...style }}
+    style={style}
+    sx={sx}
   >
-    {children}
-  </motion.div>
+    <CardContent sx={{ "&:last-child": { pb: 2 } }}>
+      {children}
+    </CardContent>
+  </MotionCard>
 );

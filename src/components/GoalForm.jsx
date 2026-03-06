@@ -1,99 +1,114 @@
+import { Box, Typography, TextField, Button, Stack, Tooltip } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import { Card } from "./ui/Card";
-import { SectionTitle } from "./ui/SectionTitle";
+import { CurrencyField } from "./ui/CurrencyField";
 import { GOAL_ICONS, GOAL_COLORS } from "../constants";
-
-const inputStyle = {
-  width: "100%", padding: "10px 12px", borderRadius: 10,
-  border: "1px solid #e2e8f0", fontSize: 14, marginTop: 4,
-  boxSizing: "border-box", outline: "none",
-};
 
 export const GoalForm = ({ form, editId, onChange, onSubmit, onCancel }) => {
   const set = (key, value) => onChange(key, value);
 
   return (
     <Card>
-      <SectionTitle t={editId ? "Editar Meta" : "Nova Meta"} />
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Typography variant="subtitle1" fontWeight={700} mb={2}>
+        {editId ? "Editar Meta" : "Nova Meta"}
+      </Typography>
 
-        {/* Ícones */}
-        <div>
-          <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Icone</label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+      <Stack spacing={2}>
+        {/* Icones */}
+        <Box>
+          <Typography variant="caption" color="text.secondary" fontWeight={600}>Icone</Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mt: 0.75 }}>
             {GOAL_ICONS.map(ic => (
-              <button key={ic} onClick={() => set("icon", ic)}
-                style={{
-                  width: 36, height: 36, borderRadius: 10, cursor: "pointer", fontSize: 18,
-                  border: `2px solid ${form.icon === ic ? "#6366f1" : "#e2e8f0"}`,
-                  background: form.icon === ic ? "#eef2ff" : "white",
-                }}>
-                {ic}
-              </button>
+              <Tooltip key={ic} title={ic} placement="top">
+                <Box
+                  component="button"
+                  onClick={() => set("icon", ic)}
+                  sx={{
+                    width: 38, height: 38, borderRadius: 2, fontSize: 20, cursor: "pointer",
+                    border: `2px solid ${form.icon === ic ? "#6366f1" : "#e2e8f0"}`,
+                    background: form.icon === ic ? "#eef2ff" : "white",
+                    transition: "all .15s",
+                    "&:hover": { borderColor: "#6366f1", background: "#eef2ff" },
+                  }}
+                >
+                  {ic}
+                </Box>
+              </Tooltip>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         {/* Nome */}
-        <div>
-          <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Nome da Meta</label>
-          <input value={form.title} onChange={e => set("title", e.target.value)}
-            placeholder="Ex: Viagem para Europa" style={inputStyle} />
-        </div>
+        <TextField
+          label="Nome da Meta"
+          value={form.title}
+          onChange={e => set("title", e.target.value)}
+          placeholder="Ex: Viagem para Europa"
+        />
 
         {/* Valores */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          <div>
-            <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Valor Total (R$)</label>
-            <input type="number" value={form.target} onChange={e => set("target", e.target.value)}
-              placeholder="0,00" style={inputStyle} />
-          </div>
-          <div>
-            <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Ja guardado (R$)</label>
-            <input type="number" value={form.saved} onChange={e => set("saved", e.target.value)}
-              placeholder="0,00" style={inputStyle} />
-          </div>
-        </div>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+          <CurrencyField
+            label="Valor Total"
+            value={form.target}
+            onChange={e => set("target", e.target.value)}
+          />
+          <CurrencyField
+            label="Ja guardado"
+            value={form.saved}
+            onChange={e => set("saved", e.target.value)}
+          />
+        </Box>
 
-        {/* Prazo e Cor */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          <div>
-            <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Prazo</label>
-            <input type="month" value={form.deadline} onChange={e => set("deadline", e.target.value)} style={inputStyle} />
-          </div>
-          <div>
-            <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Cor</label>
-            <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+        {/* Prazo + Cor */}
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5, alignItems: "start" }}>
+          <DatePicker
+            label="Prazo"
+            views={["month", "year"]}
+            value={form.deadline ? dayjs(form.deadline + "-01") : null}
+            onChange={d => set("deadline", d ? d.format("YYYY-MM") : "")}
+            slotProps={{ textField: { size: "small", fullWidth: true } }}
+            format="MM/YYYY"
+          />
+          <Box>
+            <Typography variant="caption" color="text.secondary" fontWeight={600}>Cor</Typography>
+            <Box sx={{ display: "flex", gap: 0.75, mt: 1.25 }}>
               {GOAL_COLORS.map(c => (
-                <button key={c} onClick={() => set("color", c)}
-                  style={{
+                <Box
+                  key={c}
+                  component="button"
+                  onClick={() => set("color", c)}
+                  sx={{
                     width: 28, height: 28, borderRadius: "50%", background: c, cursor: "pointer",
                     border: `3px solid ${form.color === c ? "#1e293b" : "transparent"}`,
-                  }} />
+                    transition: "transform .15s",
+                    "&:hover": { transform: "scale(1.15)" },
+                  }}
+                />
               ))}
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
-        {/* Observações */}
-        <div>
-          <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Observacoes</label>
-          <input value={form.notes} onChange={e => set("notes", e.target.value)}
-            placeholder="Notas sobre a meta..." style={inputStyle} />
-        </div>
+        {/* Observacoes */}
+        <TextField
+          label="Observacoes"
+          value={form.notes}
+          onChange={e => set("notes", e.target.value)}
+          placeholder="Notas sobre a meta..."
+        />
 
-        {/* Botões */}
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={onCancel}
-            style={{ flex: 1, padding: 12, borderRadius: 12, border: "1px solid #e2e8f0", background: "white", cursor: "pointer", fontWeight: 600, color: "#64748b" }}>
+        {/* Botoes */}
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Button variant="outlined" color="inherit" onClick={onCancel} sx={{ flex: 1 }}>
             Cancelar
-          </button>
-          <button onClick={onSubmit}
-            style={{ flex: 2, padding: 12, borderRadius: 12, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 15, background: "linear-gradient(135deg, #6366f1, #ec4899)", color: "white" }}>
+          </Button>
+          <Button variant="contained" color="primary" onClick={onSubmit} sx={{ flex: 2, py: 1.2 }}>
             {editId ? "Salvar" : "Criar Meta"}
-          </button>
-        </div>
-
-      </div>
+          </Button>
+        </Box>
+      </Stack>
     </Card>
   );
 };

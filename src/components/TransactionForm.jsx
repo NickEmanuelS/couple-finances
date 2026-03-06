@@ -1,95 +1,114 @@
+import {
+  Box, Typography, ToggleButtonGroup, ToggleButton,
+  TextField, MenuItem, Button, Stack,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import dayjs from "dayjs";
 import { Card } from "./ui/Card";
+import { CurrencyField } from "./ui/CurrencyField";
 import { PEOPLE, COLORS_PERSON, CATEGORIES } from "../constants";
 
-const inputStyle = {
-  width: "100%", padding: "10px 12px", borderRadius: 10,
-  border: "1px solid #e2e8f0", fontSize: 14, marginTop: 4,
-  boxSizing: "border-box", outline: "none",
-};
-
 export const TransactionForm = ({ form, editId, onChange, onSubmit, onCancel }) => {
-  const setField = (key, value) => onChange(key, value);
+  const set = (key, value) => onChange(key, value);
 
   return (
     <Card>
-      <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 700 }}>
+      <Typography variant="subtitle1" fontWeight={700} mb={2}>
         {editId ? "Editar Lancamento" : "Novo Lancamento"}
-      </h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      </Typography>
 
+      <Stack spacing={2}>
         {/* Tipo */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          {[["expense", "Saida", "#dc2626", "#fee2e2"], ["income", "Entrada", "#16a34a", "#dcfce7"]].map(([v, l, c, bg]) => (
-            <button key={v} onClick={() => setField("type", v)}
-              style={{
-                padding: 12, borderRadius: 12, cursor: "pointer", fontWeight: 700, fontSize: 14,
-                border: `2px solid ${form.type === v ? c : "#e2e8f0"}`,
-                background: form.type === v ? bg : "white",
-                color: form.type === v ? c : "#94a3b8",
-              }}>
-              {l}
-            </button>
-          ))}
-        </div>
+        <ToggleButtonGroup
+          exclusive fullWidth
+          value={form.type}
+          onChange={(_, v) => v && set("type", v)}
+          sx={{ gap: 1 }}
+        >
+          <ToggleButton value="expense" sx={{
+            borderRadius: "12px !important", fontWeight: 700, gap: 1, flex: 1,
+            "&.Mui-selected": { background: "#fee2e2", color: "#dc2626", borderColor: "#dc2626" },
+          }}>
+            <TrendingDown size={16} /> Saida
+          </ToggleButton>
+          <ToggleButton value="income" sx={{
+            borderRadius: "12px !important", fontWeight: 700, gap: 1, flex: 1,
+            "&.Mui-selected": { background: "#dcfce7", color: "#16a34a", borderColor: "#16a34a" },
+          }}>
+            <TrendingUp size={16} /> Entrada
+          </ToggleButton>
+        </ToggleButtonGroup>
 
         {/* Pessoa */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+        <ToggleButtonGroup
+          exclusive fullWidth
+          value={form.person}
+          onChange={(_, v) => v && set("person", v)}
+          sx={{ gap: 1 }}
+        >
           {PEOPLE.map((p, i) => (
-            <button key={p} onClick={() => setField("person", p)}
-              style={{
-                padding: 12, borderRadius: 12, cursor: "pointer", fontWeight: 700, fontSize: 14,
-                border: `2px solid ${form.person === p ? COLORS_PERSON[i] : "#e2e8f0"}`,
-                background: form.person === p ? COLORS_PERSON[i] + "15" : "white",
-                color: form.person === p ? COLORS_PERSON[i] : "#94a3b8",
-              }}>
+            <ToggleButton key={p} value={p} sx={{
+              borderRadius: "12px !important", fontWeight: 700, flex: 1,
+              "&.Mui-selected": {
+                background: COLORS_PERSON[i] + "18",
+                color: COLORS_PERSON[i],
+                borderColor: COLORS_PERSON[i],
+              },
+            }}>
               {i === 0 ? "👦" : "👧"} {p}
-            </button>
+            </ToggleButton>
           ))}
-        </div>
+        </ToggleButtonGroup>
 
-        {/* Campos de texto */}
-        {[["desc", "Descricao", "text", "Ex: Supermercado, Salario..."],
-          ["amount", "Valor (R$)", "number", "0,00"],
-          ["date", "Data", "date", ""]].map(([k, label, type, placeholder]) => (
-          <div key={k}>
-            <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>{label}</label>
-            <input
-              value={form[k]}
-              onChange={e => setField(k, e.target.value)}
-              type={type}
-              placeholder={placeholder}
-              style={inputStyle}
-            />
-          </div>
-        ))}
+        {/* Descricao */}
+        <TextField
+          label="Descricao"
+          value={form.desc}
+          onChange={e => set("desc", e.target.value)}
+          placeholder="Ex: Supermercado, Salario..."
+        />
+
+        {/* Valor + Data */}
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+          <CurrencyField
+            label="Valor"
+            value={form.amount}
+            onChange={e => set("amount", e.target.value)}
+          />
+          <DatePicker
+            label="Data"
+            value={form.date ? dayjs(form.date) : null}
+            onChange={d => set("date", d ? d.format("YYYY-MM-DD") : "")}
+            slotProps={{ textField: { size: "small", fullWidth: true } }}
+            format="DD/MM/YYYY"
+          />
+        </Box>
 
         {/* Categoria */}
-        <div>
-          <label style={{ fontSize: 12, color: "#64748b", fontWeight: 600 }}>Categoria</label>
-          <select
-            value={form.category}
-            onChange={e => setField("category", e.target.value)}
-            style={{ ...inputStyle, background: "white" }}
-          >
-            {CATEGORIES[form.type].map(c => <option key={c}>{c}</option>)}
-          </select>
-        </div>
+        <TextField
+          select
+          label="Categoria"
+          value={form.category}
+          onChange={e => set("category", e.target.value)}
+        >
+          {CATEGORIES[form.type].map(c => (
+            <MenuItem key={c} value={c}>{c}</MenuItem>
+          ))}
+        </TextField>
 
-        {/* Botões */}
-        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+        {/* Botoes */}
+        <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
           {editId && (
-            <button onClick={onCancel}
-              style={{ flex: 1, padding: 12, borderRadius: 12, border: "1px solid #e2e8f0", background: "white", cursor: "pointer", fontWeight: 600, color: "#64748b" }}>
+            <Button variant="outlined" color="inherit" onClick={onCancel} sx={{ flex: 1 }}>
               Cancelar
-            </button>
+            </Button>
           )}
-          <button onClick={onSubmit}
-            style={{ flex: 2, padding: 12, borderRadius: 12, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 15, background: "linear-gradient(135deg, #6366f1, #ec4899)", color: "white" }}>
+          <Button variant="contained" color="primary" onClick={onSubmit} sx={{ flex: 2, py: 1.2 }}>
             {editId ? "Salvar Alteracoes" : "Adicionar Lancamento"}
-          </button>
-        </div>
-
-      </div>
+          </Button>
+        </Box>
+      </Stack>
     </Card>
   );
 };
