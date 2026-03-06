@@ -7,9 +7,16 @@ export const Header = ({ month, year, onMonthChange, onYearChange, stats }) => (
     borderRadius: 20, padding: "20px 24px", marginBottom: 16, color: "white",
   }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
-      <div>
-        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800 }}>Nicolas & Nicole</h1>
-        <p style={{ margin: "4px 0 0", opacity: 0.85, fontSize: 13 }}>Controle financeiro do casal</p>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <img
+          src="/couple-finances-logo.png"
+          alt="Couple Finances"
+          style={{ width: 52, height: 52, borderRadius: 14, background: "white", padding: 4, flexShrink: 0 }}
+        />
+        <div>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800 }}>Nicolas & Nicole</h1>
+          <p style={{ margin: "4px 0 0", opacity: 0.85, fontSize: 13 }}>Controle financeiro do casal</p>
+        </div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
         <select

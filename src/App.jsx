@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { toast, Toaster } from "sonner";
 import { useTransactions } from "./hooks/useTransactions";
 import { useGoals } from "./hooks/useGoals";
 import { computeStats } from "./utils/finance";
@@ -9,6 +10,7 @@ import { Dashboard } from "./components/Dashboard";
 import { TransactionList } from "./components/TransactionList";
 import { TransactionForm } from "./components/TransactionForm";
 import { GoalList } from "./components/GoalList";
+import { TabContent } from "./components/ui/TabContent";
 
 const now = new Date();
 
@@ -43,12 +45,19 @@ export default function App() {
   };
 
   const handleDeleteTx = (id) => {
-    if (confirm("Excluir este lancamento?")) deleteTx(id);
+    toast("Excluir este lancamento?", {
+      action: { label: "Excluir", onClick: () => { deleteTx(id); toast.success("Lancamento excluido."); } },
+      cancel: { label: "Cancelar" },
+    });
   };
 
   const handleSubmitTx = async () => {
-    if (!form.desc || !form.amount || isNaN(parseFloat(form.amount))) return;
+    if (!form.desc || !form.amount || isNaN(parseFloat(form.amount))) {
+      toast.error("Preencha todos os campos corretamente.");
+      return;
+    }
     await saveTx(form, editId);
+    toast.success(editId ? "Lancamento atualizado!" : "Lancamento adicionado!");
     setEditId(null);
     setForm({ ...DEFAULT_TRANSACTION, type: form.type, person: form.person });
     setTab("transactions");
@@ -63,19 +72,24 @@ export default function App() {
   const handleFormChange = (key, value) => setForm(f => buildUpdatedForm(f, key, value));
 
   const handleDeleteGoal = (id) => {
-    if (confirm("Excluir esta meta?")) deleteGoal(id);
+    toast("Excluir esta meta?", {
+      action: { label: "Excluir", onClick: () => { deleteGoal(id); toast.success("Meta excluida."); } },
+      cancel: { label: "Cancelar" },
+    });
   };
 
   const handleAddSavings = (goalId, amount) => addSavings(goalId, amount, goals);
 
   if (loading) return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "sans-serif", color: "#6366f1", flexDirection: "column", gap: 12 }}>
-      <p style={{ fontWeight: 700 }}>Carregando dados...</p>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f1f5f9", flexDirection: "column", gap: 16 }}>
+      <img src="/couple-finances-logo.png" alt="Couple Finances" style={{ width: 80, height: 80, borderRadius: 20 }} />
+      <p style={{ fontWeight: 700, color: "#6366f1", fontSize: 15, margin: 0 }}>Carregando dados...</p>
     </div>
   );
 
   return (
     <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#f1f5f9", minHeight: "100vh", padding: "16px" }}>
+      <Toaster position="top-center" richColors closeButton />
       <div style={{ maxWidth: 780, margin: "0 auto" }}>
 
         <Header
@@ -86,36 +100,38 @@ export default function App() {
 
         <TabBar activeTab={tab} onSelect={handleTabSelect} hasEdit={!!editId} />
 
-        {tab === "dashboard" && (
-          <Dashboard stats={stats} goals={goals} monthTxs={monthTxs} month={month} year={year} />
-        )}
+        <TabContent tabKey={tab}>
+          {tab === "dashboard" && (
+            <Dashboard stats={stats} goals={goals} monthTxs={monthTxs} month={month} year={year} />
+          )}
 
-        {tab === "transactions" && (
-          <TransactionList
-            transactions={filtered}
-            filterPerson={filterPerson} filterType={filterType}
-            onPersonChange={setFilterPerson} onTypeChange={setFilterType}
-            onEdit={handleEditTx} onDelete={handleDeleteTx}
-          />
-        )}
+          {tab === "transactions" && (
+            <TransactionList
+              transactions={filtered}
+              filterPerson={filterPerson} filterType={filterType}
+              onPersonChange={setFilterPerson} onTypeChange={setFilterType}
+              onEdit={handleEditTx} onDelete={handleDeleteTx}
+            />
+          )}
 
-        {tab === "goals" && (
-          <GoalList
-            goals={goals}
-            onSave={saveGoal}
-            onDelete={handleDeleteGoal}
-            onAddSavings={handleAddSavings}
-          />
-        )}
+          {tab === "goals" && (
+            <GoalList
+              goals={goals}
+              onSave={saveGoal}
+              onDelete={handleDeleteGoal}
+              onAddSavings={handleAddSavings}
+            />
+          )}
 
-        {tab === "add" && (
-          <TransactionForm
-            form={form} editId={editId}
-            onChange={handleFormChange}
-            onSubmit={handleSubmitTx}
-            onCancel={handleCancelTx}
-          />
-        )}
+          {tab === "add" && (
+            <TransactionForm
+              form={form} editId={editId}
+              onChange={handleFormChange}
+              onSubmit={handleSubmitTx}
+              onCancel={handleCancelTx}
+            />
+          )}
+        </TabContent>
 
       </div>
     </div>

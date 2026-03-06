@@ -1,3 +1,4 @@
+import { Pencil, Trash2, TrendingUp, TrendingDown } from "lucide-react";
 import { Card } from "./ui/Card";
 import { PEOPLE, COLORS_PERSON } from "../constants";
 import { fmt, parseDate } from "../utils/finance";
@@ -35,9 +36,11 @@ const TransactionItem = ({ tx, onEdit, onDelete }) => {
       <div style={{
         width: 36, height: 36, borderRadius: "50%",
         background: tx.type === "income" ? "#dcfce7" : "#fee2e2",
-        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0,
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
       }}>
-        {tx.type === "income" ? "💰" : "💸"}
+        {tx.type === "income"
+          ? <TrendingUp size={18} color="#16a34a" />
+          : <TrendingDown size={18} color="#dc2626" />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 600, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tx.desc}</div>
@@ -51,8 +54,12 @@ const TransactionItem = ({ tx, onEdit, onDelete }) => {
         {tx.type === "income" ? "+" : "-"}{fmt(tx.amount)}
       </div>
       <div style={{ display: "flex", gap: 4 }}>
-        <button onClick={() => onEdit(tx)} style={{ background: "#e0e7ff", border: "none", borderRadius: 8, padding: "5px 8px", cursor: "pointer" }}>✏️</button>
-        <button onClick={() => onDelete(tx.id)} style={{ background: "#fee2e2", border: "none", borderRadius: 8, padding: "5px 8px", cursor: "pointer" }}>🗑️</button>
+        <button onClick={() => onEdit(tx)} style={{ background: "#e0e7ff", border: "none", borderRadius: 8, padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center" }}>
+          <Pencil size={14} color="#6366f1" />
+        </button>
+        <button onClick={() => onDelete(tx.id)} style={{ background: "#fee2e2", border: "none", borderRadius: 8, padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center" }}>
+          <Trash2 size={14} color="#dc2626" />
+        </button>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Pencil, Trash2, PiggyBank, Plus } from "lucide-react";
 import { Card } from "./ui/Card";
 import { GoalForm } from "./GoalForm";
 import { fmt } from "../utils/finance";
@@ -32,8 +33,12 @@ const GoalCard = ({ goal, onEdit, onDelete, onAddSavings }) => {
           </div>
         </div>
         <div style={{ display: "flex", gap: 4 }}>
-          <button onClick={() => onEdit(goal)} style={{ background: "#e0e7ff", border: "none", borderRadius: 8, padding: "5px 8px", cursor: "pointer" }}>✏️</button>
-          <button onClick={() => onDelete(goal.id)} style={{ background: "#fee2e2", border: "none", borderRadius: 8, padding: "5px 8px", cursor: "pointer" }}>🗑️</button>
+          <button onClick={() => onEdit(goal)} style={{ background: "#e0e7ff", border: "none", borderRadius: 8, padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center" }}>
+            <Pencil size={14} color="#6366f1" />
+          </button>
+          <button onClick={() => onDelete(goal.id)} style={{ background: "#fee2e2", border: "none", borderRadius: 8, padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center" }}>
+            <Trash2 size={14} color="#dc2626" />
+          </button>
         </div>
       </div>
 
@@ -82,8 +87,8 @@ const GoalCard = ({ goal, onEdit, onDelete, onAddSavings }) => {
             style={{ flex: 1, padding: "8px 12px", borderRadius: 10, border: "1px solid #e2e8f0", fontSize: 14, outline: "none" }}
           />
           <button onClick={handleAdd}
-            style={{ padding: "8px 16px", borderRadius: 10, border: "none", background: goal.color, color: "white", fontWeight: 700, cursor: "pointer" }}>
-            + Guardar
+            style={{ padding: "8px 14px", borderRadius: 10, border: "none", background: goal.color, color: "white", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+            <PiggyBank size={15} /> Guardar
           </button>
         </div>
       )}
@@ -121,8 +126,8 @@ export const GoalList = ({ goals, onSave, onDelete, onAddSavings }) => {
       {!showForm && (
         <button
           onClick={() => { setShowForm(true); setEditId(null); setForm(DEFAULT_GOAL); }}
-          style={{ padding: 12, borderRadius: 14, border: "2px dashed #a5b4fc", background: "#eef2ff", cursor: "pointer", fontWeight: 700, fontSize: 14, color: "#6366f1" }}>
-          Nova Meta do Casal
+          style={{ padding: 12, borderRadius: 14, border: "2px dashed #a5b4fc", background: "#eef2ff", cursor: "pointer", fontWeight: 700, fontSize: 14, color: "#6366f1", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+          <Plus size={16} /> Nova Meta do Casal
         </button>
       )}
 
