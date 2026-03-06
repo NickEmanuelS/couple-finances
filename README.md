@@ -1,16 +1,96 @@
-# React + Vite
+# 💑 Couple Finances — Nicolas & Nicole
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicativo web de controle financeiro para casais, com sincronização em tempo real via Firebase.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Dashboard** — visão geral mensal com totais de entradas, saídas e saldo por pessoa, gráfico comparativo e distribuição de gastos por categoria
+- **Lançamentos** — listagem filtrável por pessoa e tipo (entrada/saída), com edição e exclusão
+- **Metas** — criação e acompanhamento de metas financeiras do casal com barra de progresso, prazo e cálculo de valor mensal necessário
+- **Adicionar/Editar** — formulário para cadastro de transações com categorias predefinidas para receitas e despesas
+- Sincronização em tempo real com **Firebase Firestore**
+- Interface responsiva com seletor de mês/ano para navegação histórica
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Tecnologia | Uso |
+|---|---|
+| React 19 | Interface |
+| Vite 7 | Build e dev server |
+| Firebase 12 (Firestore) | Banco de dados em tempo real |
+| Recharts 3 | Gráficos (pizza e barras) |
 
-## Expanding the ESLint configuration
+## Pré-requisitos
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js 18+
+- Projeto no [Firebase Console](https://console.firebase.google.com) com Firestore habilitado
+
+## Configuração
+
+1. Clone o repositório:
+   ```bash
+   git clone <url-do-repo>
+   cd couple-finances
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure o Firebase. Crie o arquivo `src/firebase.js` com as credenciais do seu projeto:
+   ```js
+   import { initializeApp } from "firebase/app";
+   import { getFirestore } from "firebase/firestore";
+
+   const firebaseConfig = {
+     apiKey: "...",
+     authDomain: "...",
+     projectId: "...",
+     storageBucket: "...",
+     messagingSenderId: "...",
+     appId: "..."
+   };
+
+   const app = initializeApp(firebaseConfig);
+   export const db = getFirestore(app);
+   ```
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+## Scripts
+
+```bash
+npm run dev       # Servidor de desenvolvimento
+npm run build     # Build de produção
+npm run preview   # Preview do build
+npm run lint      # Lint com ESLint
+```
+
+## Estrutura do Firestore
+
+### Coleção `transactions`
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `desc` | string | Descrição do lançamento |
+| `amount` | number | Valor em R$ |
+| `type` | string | `"income"` ou `"expense"` |
+| `category` | string | Categoria do lançamento |
+| `person` | string | `"Nicolas"` ou `"Nicole"` |
+| `date` | string | Data no formato `YYYY-MM-DD` |
+
+### Coleção `goals`
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `title` | string | Nome da meta |
+| `target` | number | Valor total da meta em R$ |
+| `saved` | number | Valor já guardado em R$ |
+| `icon` | string | Emoji representando a meta |
+| `color` | string | Cor hex da barra de progresso |
+| `deadline` | string | Prazo no formato `YYYY-MM` |
+| `notes` | string | Observações opcionais |
