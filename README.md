@@ -1,6 +1,12 @@
+<div align="center">
+  <img src="./public/couple-finances-logo.png" alt="Couple Finances Logo" width="200"/>
+
 # 💑 Couple Finances — Nicolas & Nicole
 
 Aplicativo web de controle financeiro para casais, com sincronização em tempo real via Firebase.
+
+  *Organizando sonhos, planejando futuros juntos*
+ </div>  
 
 ## Funcionalidades
 
@@ -12,6 +18,18 @@ Aplicativo web de controle financeiro para casais, com sincronização em tempo 
 - Interface responsiva com seletor de mês/ano para navegação histórica
 
 ## Stack
+
+<div align="center">
+<div style="display: inline_block"><br/>
+	<img align="center" alt="react" src="https://img.shields.io/badge/-React-45b8d8?style=for-the-badge&logo=react&logoColor=white" />
+   <img align="center" alt="vite" src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white" />
+   <img align="center" alt="vite" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+   <img align="center" alt="vite" src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white%22/%3E" />
+	<img align="center" alt="sql" src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" />
+</div>
+</div> 
+
+###
 
 | Tecnologia | Uso |
 |---|---|

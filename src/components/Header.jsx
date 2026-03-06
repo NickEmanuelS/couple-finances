@@ -9,9 +9,9 @@ export const Header = ({ month, year, onMonthChange, onYearChange, stats }) => (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <img
-          src="/couple-finances-logo.png"
+          src="/couple-finances-header.png"
           alt="Couple Finances"
-          style={{ width: 52, height: 52, borderRadius: 14, background: "white", padding: 4, flexShrink: 0 }}
+          style={{ width: 64, height: 64, borderRadius: 14, flexShrink: 0 }}
         />
         <div>
           <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800 }}>Nicolas & Nicole</h1>
